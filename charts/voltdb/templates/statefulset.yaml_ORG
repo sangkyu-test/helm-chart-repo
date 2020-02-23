@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: voltdb
+  namespace: default
+spec:
+  podManagementPolicy: Parallel
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voltdb
+  serviceName: "voltdb"
+  template:
+    metadata:
+      labels:
+        app: voltdb
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - voltdb
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - command:
+        - voltdbk8s.py
+        - voltdb
+        - start
+        - -c
+        - $(NODECOUNT)
+        - $(VOLTDB_START_ARGS)
+        envFrom:
+        - configMapRef:
+            name: voltdb-run-env
+        image: rokmclsk/test
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 180
+          periodSeconds: 60
+          successThreshold: 1
+          tcpSocket:
+            port: intra-node
+          timeoutSeconds: 1
+        name: voltdb
+        ports:
+        - containerPort: 3021
+          name: intra-node
+          protocol: TCP
+        - containerPort: 3022
+          name: tls-intra-node
+          protocol: TCP
+        - containerPort: 21211
+          name: external-admin
+          protocol: TCP
+        - containerPort: 21212
+          name: external-client
+          protocol: TCP
+        - containerPort: 5555
+          name: replication
+          protocol: TCP
+        - containerPort: 8080
+          name: vmc
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - k8sreadycheck.py
+          failureThreshold: 3
+          initialDelaySeconds: 180
+          periodSeconds: 60
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: 1
+            memory: 1Gi
+        volumeMounts:
+        - mountPath: /voltdbroot
+          name: voltdbroot
+        - mountPath: /etc/voltdb
+          name: voltdb-init-volume
+        - mountPath: /etc/voltdb/classes
+          name: voltdb-classes-volume
+        - mountPath: /etc/voltdb/schema
+          name: voltdb-schema-volume
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          name: voltdb-init-configmap
+        name: voltdb-init-volume
+      - configMap:
+          name: voltdb-init-classes
+        name: voltdb-classes-volume
+      - configMap:
+          name: voltdb-init-schema
+        name: voltdb-schema-volume
+  volumeClaimTemplates:
+  - metadata:
+      name: voltdbroot
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: managed-nfs-storag
