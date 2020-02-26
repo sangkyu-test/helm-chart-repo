@@ -27,7 +27,7 @@ metadata:
   namespace: default
 spec:
   podManagementPolicy: Parallel
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: voltdb
@@ -136,4 +136,4 @@ spec:
       resources:
         requests:
           storage: 1Gi
-      storageClassName: managed-nfs-storag
+      storageClassName: managed-nfs-storage
