@@ -3,11 +3,21 @@ entries:
   demo:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-02-23T11:22:23.945065358Z"
+    created: "2020-03-02T06:45:18.820689883Z"
     description: A Helm chart for Kubernetes
     digest: 436989830d0b8aecf63c4d08d320ac07641bea155aa0f13e6ceebd97d98b6e4a
     name: demo
     urls:
-    - https://sangkyu-test.github.io/helm-chart-repo/stable/demo-0.1.0.tgz
+    - https://sangkyu-test.github.io/voltdb/stable/demo-0.1.0.tgz
     version: 0.1.0
-generated: "2020-02-23T11:22:23.944398982Z"
+  voltdb:
+  - apiVersion: v1
+    appVersion: "1"
+    created: "2020-03-02T06:45:18.820886063Z"
+    description: My TEST voltdb
+    digest: dc78a056cdf79fd0f19c1dd4a2e411d6317582c3c25948b39c7fbc76e6bffc99
+    name: voltdb
+    urls:
+    - https://sangkyu-test.github.io/voltdb/stable/voltdb-0.1.0.tgz
+    version: 0.1.0
+generated: "2020-03-02T06:45:18.820024987Z"
