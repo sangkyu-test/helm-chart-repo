@@ -1,0 +1,13 @@
+apiVersion: v1
+entries:
+  demo:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-02-23T11:22:23.945065358Z"
+    description: A Helm chart for Kubernetes
+    digest: 436989830d0b8aecf63c4d08d320ac07641bea155aa0f13e6ceebd97d98b6e4a
+    name: demo
+    urls:
+    - https://sangkyu-test.github.io/helm-chart-repo/stable/demo-0.1.0.tgz
+    version: 0.1.0
+generated: "2020-02-23T11:22:23.944398982Z"
